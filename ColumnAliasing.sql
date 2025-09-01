@@ -1,5 +1,4 @@
 
-
 CREATE TABLE students (
  student_id SERIAL PRIMARY KEY,
  first_name VARCHAR(30) NOT NULL,
