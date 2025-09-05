@@ -12,6 +12,8 @@ CREATE TABLE students (
  country VARCHAR(50)
 );
 
+
+
 INSERT INTO students (first_name, last_name, age, grade, course, email, dob, blood_group, country) 
 VALUES 
 ('John', 'Doe', 20, 'A+', 'Computer Science', 'john.doe@example.com', '2004-05-10', 'O+', 'USA'),
