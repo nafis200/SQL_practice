@@ -68,3 +68,19 @@ SELECT * from studentsInformation WHERE email  ILIKE '%John.doe%'
 SELECT * from studentsInformation WHERE country IN('USA','Canada') ORDER BY age DESC
 
 SELECT concat(first_name, ' ', last_name) as Full_name from studentsInformation
+
+SELECT * FROM studentsInformation WHERE age BETWEEN 20 AND 23  ORDER BY age DESC
+
+SELECT DISTINCT country, count(*) FROM studentsInformation WHERE country NOT IN('USA','Australia') GROUP BY country
+
+SELECT * from studentsInformation WHERE grade IN('B','B+') AND country IN('Canada','UK')
+
+SELECT * from studentsInformation WHERE email ILIKE '%example.com' AND course = 'Physics'
+
+SELECT * from studentsInformation WHERE age <= 21 ORDER BY age ASC
+
+SELECT DISTINCT course, count(*) from studentsInformation GROUP BY course
+
+SELECT concat(first_name, ' ', last_name) as Full_Name from studentsInformation
+
+SELECT * from studentsInformation WHERE age = (SELECT max(age) from studentsInformation)
