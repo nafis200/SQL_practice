@@ -133,3 +133,111 @@ WHERE salary <> (SELECT MAX(salary) FROM employees);
 SELECT department, MAX(salary) as "Highest salary", MIN(salary) as "Lowest Salary" from employees GROUP BY department
 
 SELECT *, RANK() over(PARTITION BY department ORDER BY salary DESC) as salary_rank from employees 
+
+SELECT department, salary
+FROM (
+    SELECT department, salary,
+           RANK() OVER (PARTITION BY department ORDER BY salary DESC) AS rnk
+    FROM employees 
+) t
+WHERE rnk = 1;
+
+
+SELECT department,salary FROM(select department,salary, RANK() OVER(PARTITION BY department ORDER BY salary DESC) as rnk FROM employees) t WHERE rnk = 1;
+
+
+select  first_name,salary, RANK() OVER(ORDER BY salary DESC) as rnk FROM employees
+
+SELECT first_name,salary,LAG(salary) OVER(ORDER BY salary DESC) AS prev_salary,salary - LAG(salary) OVER (ORDER BY salary DESC) AS salary_gap from employees
+
+SELECT first_name,salary,LEAD(salary) OVER(ORDER BY salary DESC) AS prev_salary,salary - LEAD(salary) OVER (ORDER BY salary DESC) AS salary_gap from employees
+
+
+
+SELECT avg(salary) from employees
+
+SELECT first_name,department,salary,AVG(salary)OVER(PARTITION BY department) from employees
+
+
+SELECT first_name, department, salary
+FROM (
+    SELECT first_name, department, salary,
+           AVG(salary) OVER (PARTITION BY department) AS dept_avg
+    FROM employees
+) t
+WHERE salary > dept_avg;
+
+
+select department,SUM(salary) as total_salary from employees GROUP BY department ORDER BY total_salary  DESC
+
+
+SELECT AVG(salary) AS avg_salary
+FROM employees
+WHERE department = 'Finance';
+
+SELECT first_name,department,salary from employees Where salary > (SELECT AVG(salary) AS avg_salary
+FROM employees
+WHERE department = 'Finance')
+
+SELECT first_name,hire_date,extract(YEAR FROM AGE(CURRENT_DATE,hire_date)) AS years_worked,RANK()OVER(ORDER BY hire_date)from employees ORDER BY hire_date ASC
+
+ SELECT first_name,
+           department,
+           hire_date,
+           ROW_NUMBER() OVER (PARTITION BY department ORDER BY hire_date DESC) AS rn
+    FROM employees
+
+
+SELECT first_name, department, hire_date
+FROM (
+    SELECT first_name,
+           department,
+           hire_date,
+           ROW_NUMBER() OVER (PARTITION BY department ORDER BY hire_date DESC) AS rn
+    FROM employees
+) t
+WHERE rn = 1;
+
+
+SELECT department,salary FROM (SELECT department,salary,RANK()OVER(PARTITION BY department ORDER BY salary DESC) as rnk from employees) WHERE rnk = 2
+
+
+SELECT department, SUM(salary) AS total_salary
+FROM employees
+GROUP BY department;
+
+
+SELECT COALESCE(department,'Grand Total'), SUM(salary) AS total_salary
+FROM employees
+GROUP BY ROLLUP(department);
+
+SELECT first_name, department, hire_date
+FROM employees
+WHERE hire_date < '2019-01-01';
+
+
+
+SELECT first_name,
+       department,
+       salary,
+       MAX(salary) OVER (PARTITION BY department) - salary AS salary_gap
+FROM employees;
+
+SELECT department, first_name,hire_date FROM(SELECT department,first_name,hire_date, ROW_NUMBER()OVER(PARTITION BY department ORDER BY hire_date) as rnk from employees)t WHERE rnk = 1
+
+SELECT first_name, department, salary
+FROM (
+    SELECT first_name,
+           department,
+           salary,
+           AVG(salary) OVER (PARTITION BY department) AS dept_avg
+    FROM employees
+) t
+WHERE salary > dept_avg;
+
+
+SELECT first_name,
+       department,
+       salary,
+       ROUND((salary * 100.0) / SUM(salary) OVER (PARTITION BY department),2) AS percentage_contribution
+FROM employees;
